@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+   
+    overflow: hidden;
+}
+
+h1, h2, h3, h4, p, label {
+    margin: 0;
+
+    font-family: 'Manrope', sans-serif;
+}
+
+* {
+    outline: none;
+   
+    scrollbar-width: none;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+*:focus {
+    box-shadow: none !important;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
