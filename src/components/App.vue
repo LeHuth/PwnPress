@@ -1,26 +1,34 @@
 <script setup>
     import InputText from 'primevue/inputtext';
+    import Dropdown from 'primevue/dropdown';
     import Divider from 'primevue/divider';
     import Button from 'primevue/button';
 
     import Uploader from './Uploader.vue';
 
-    function handle_pwndoc(text) {
+    import { ref } from 'vue';
 
-    }
-
-    function handle_scanned(text) {
-
-    }
-
-    function handle_excluded(text) {
-
-    }
+    const data = ref({
+        propability: '',
+        pwndoc_json: '',
+        scanned: '',
+        excluded: '',
+        damage: '',
+        title: '',
+    });
 
     const uploads = [
-        { title: 'PwnDoc - Json', info: 'Json from PwnDoc', callback: handle_scanned },
-        { title: 'Scanned - Domains', info: 'CSV of scanned domains', callback: handle_scanned }, 
-        { title: 'Excluded - Domains', info: 'CSV of excluded domains', callback: handle_excluded },
+        { title: 'PwnDoc - Json', info: 'Json from PwnDoc', callback: text => data.pwndoc_json = text },
+        { title: 'Scanned - Domains', info: 'CSV of scanned domains', callback: text => data.excluded = text }, 
+        { title: 'Excluded - Domains', info: 'CSV of excluded domains', callback: text => data.scanned = text },
+    ]
+
+    const propabilities = [
+        { name: 'Unwahrscheinlich' }
+    ];
+
+    const damages = [
+        { name: 'Schwer' }
     ]
 </script>
 
@@ -31,8 +39,18 @@
                 <h2 class='font-bold'>Create Report</h2>
             </div>
             <div class='w-full flex justify-content-between align-items-center gap-2 p-3'>
-                <InputText class='w-full' placeholder='Title*' />
+                <InputText v-model='data.title' class='w-full' placeholder='Title*' />
                 <Button class='p-button-info p-button-raised w-12rem' label='Create' />
+            </div>
+            <div class='w-full px-3'>
+                <Divider />
+            </div>
+            <div class='w-full flex align-items-center p-3'>
+                <h2 class='font-bold'>Risiko Matrix</h2>
+            </div>
+            <div class='w-full flex justify-content-between align-items-center gap-2 p-3'>
+                <Dropdown v-model='data.propability' :options='propabilities' optionLabel='name' class='w-full' placeholder='Propability' />
+                <Dropdown v-model='data.damage' :options='damages' optionLabel='name' class='w-full' placeholder='Damage' />
             </div>
             <h2 class='font-bold mx-3'>Uploads</h2>
             <div class='w-full px-3'>
