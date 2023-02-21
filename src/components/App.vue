@@ -16,6 +16,7 @@
         scanned: '',
         damage: '',
         title: '',
+        logo: ''
     });
 
     const uploads = [
@@ -23,6 +24,7 @@
         { title: 'Scanned - Domains', info: 'CSV of scanned domains', callback: text => data.excluded = text }, 
         { title: 'Excluded - Domains', info: 'CSV of excluded domains', callback: text => data.scanned = text },
         { title: 'Security - Projects', info: 'CSV of security prjects', callback: text => data.security = text },
+        { title: 'Customer - Logo', info: '.jpg, .jpeg, .png', callback: text => logo = text },
     ]
 
     const propabilities = [
@@ -59,8 +61,8 @@
                 <h2 class='font-bold'>Risiko Matrix</h2>
             </div>
             <div class='w-full flex justify-content-between align-items-center gap-2 p-3'>
-                <Dropdown v-model='data.propability' :options='propabilities' optionLabel='name' class='w-full' placeholder='Propability' />
-                <Dropdown v-model='data.damage' :options='damages' optionLabel='name' class='w-full' placeholder='Damage' />
+                <Dropdown v-model='data.propability' :options='propabilities' optionLabel='name' class='w-full' placeholder='Wahrscheinlichkeit' />
+                <Dropdown v-model='data.damage' :options='damages' optionLabel='name' class='w-full' placeholder='Schadensausmass' />
             </div>
             <h2 class='font-bold mx-3'>Uploads</h2>
             <div class='w-full px-3'>
