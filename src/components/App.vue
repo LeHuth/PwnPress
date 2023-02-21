@@ -11,8 +11,9 @@
     const data = ref({
         propability: '',
         pwndoc_json: '',
-        scanned: '',
         excluded: '',
+        security: '',
+        scanned: '',
         damage: '',
         title: '',
     });
@@ -21,14 +22,23 @@
         { title: 'PwnDoc - Json', info: 'Json from PwnDoc', callback: text => data.pwndoc_json = text },
         { title: 'Scanned - Domains', info: 'CSV of scanned domains', callback: text => data.excluded = text }, 
         { title: 'Excluded - Domains', info: 'CSV of excluded domains', callback: text => data.scanned = text },
+        { title: 'Security - Projects', info: 'CSV of security prjects', callback: text => data.security = text },
     ]
 
     const propabilities = [
-        { name: 'Unwahrscheinlich' }
+        { name: 'Sehr Wahrscheinlich' },
+        { name: 'Wahrscheinlich' },
+        { name: 'Möglich' },
+        { name: 'Unwahrscheinlich' },
+        { name: 'Nahezu Unmöglich' },
     ];
 
     const damages = [
-        { name: 'Schwer' }
+        { name: 'Niedrig' },
+        { name: 'Mittel' },
+        { name: 'Hoch' },
+        { name: 'Sehr Hoch' },
+        { name: 'Kritisch' },
     ]
 </script>
 

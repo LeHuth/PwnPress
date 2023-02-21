@@ -4,7 +4,7 @@
     import { ref } from 'vue';
 
     const input_ref = ref(null);
-    const name = ref(null);
+    const name = ref(undefined);
 </script>
 
 <template>
@@ -27,7 +27,7 @@
                 <p class='font-semibold'>{{  name  }}</p>
                 <Button
                     class='p-button-text p-button-danger p-button-rounded'
-                    @click='name = null'
+                    @click='name = undefined'
                     icon='pi pi-times'
                 />
             </div>
