@@ -27,7 +27,10 @@
                 <p class='font-semibold'>{{  name  }}</p>
                 <Button
                     class='p-button-text p-button-danger p-button-rounded'
-                    @click='name = undefined'
+                    @click='{
+                        name = undefined;
+                        input_ref.value = null;
+                    }'
                     icon='pi pi-times'
                 />
             </div>
