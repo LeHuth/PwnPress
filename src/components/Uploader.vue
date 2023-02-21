@@ -1,5 +1,9 @@
 <script setup>
     import Button from 'primevue/button';
+
+    import { ref } from 'vue';
+
+    const input_ref = ref(null);
 </script>
 
 <template>
@@ -12,7 +16,17 @@
                     <p class='font-light text-sm'>{{ $attrs.info }}</p>
                 </div>
             </div>
-            <Button class='p-button-info p-button-rounded p-button-raised' icon='pi pi-plus'  />
+            <Button
+                class='p-button-info p-button-rounded p-button-raised'
+                icon='pi pi-plus'
+                @click='input_ref.click()'
+            />
+            <input
+                type='file'
+                class='hidden'
+                ref='input_ref'
+                @input='event => event.target.files[0].text().then(text => $emit("callback", text))'
+            />
         </div>
     </div>
 </template>

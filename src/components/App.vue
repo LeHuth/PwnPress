@@ -5,10 +5,22 @@
 
     import Uploader from './Uploader.vue';
 
+    function handle_pwndoc(text) {
+
+    }
+
+    function handle_scanned(text) {
+
+    }
+
+    function handle_excluded(text) {
+
+    }
+
     const uploads = [
-        { title: 'PwnDoc - Json', info: 'Json from PwnDoc' },
-        { title: 'Scanned - Domains', info: 'CSV of scanned domains' }, 
-        { title: 'Excluded - Domains', info: 'CSV of excluded domains' },
+        { title: 'PwnDoc - Json', info: 'Json from PwnDoc', callback: handle_scanned },
+        { title: 'Scanned - Domains', info: 'CSV of scanned domains', callback: handle_scanned }, 
+        { title: 'Excluded - Domains', info: 'CSV of excluded domains', callback: handle_excluded },
     ]
 </script>
 
@@ -28,6 +40,7 @@
             </div>
             <Uploader v-for='(upload, i) in uploads'
                 :key='i'
+                @callback='upload.callback'
                 :title='upload.title'
                 :info='upload.info'
             />
