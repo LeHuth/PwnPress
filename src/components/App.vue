@@ -60,7 +60,7 @@
             loading.value = false;
 
             if (response.status == '200')
-                window.location = response.url;
+                window.open(response.url)
         });
 
         loading.value = true;
