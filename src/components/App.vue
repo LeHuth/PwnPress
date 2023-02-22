@@ -9,18 +9,11 @@
 
     import { ref } from 'vue';
 
-    function handle_image(file) {
-        return new Promise(resolve => {
-            const reader = new FileReader();
-
-            reader.readAsDataURL(file);
-            reader.onload = event => resolve(event.target.result);
-        });
-    }
-
-    function handle_text(file) {
-        return file.text();
-    }
+    import {
+        handle_image,
+        handle_text,
+        parse_csv
+    } from '../utils';
 
     const loading = ref(false);
 
@@ -38,8 +31,8 @@
 
     const uploads = [
         { title: 'PwnDoc - Json', info: 'Json from PwnDoc', callback: async file => data.value.pwndoc_json = await handle_text(file) },
-        { title: 'Scanned - Domains', info: 'CSV of scanned domains', callback: async file => data.value.excluded = await handle_text(file) }, 
-        { title: 'Excluded - Domains', info: 'CSV of excluded domains', callback: async file => data.value.scanned = await handle_text(file) },
+        { title: 'Scanned - Domains', info: 'CSV of scanned scopes', callback: async file => data.value.scanned = await handle_text(file) }, 
+        { title: 'Excluded - Domains', info: 'CSV of excluded scopes', callback: async file => data.value.excluded = await handle_text(file) },
         { title: 'Security - Projects', info: 'CSV of security prjects', callback: async file => data.value.security = await handle_text(file) },
         { title: 'Customer - Logo', info: '.jpg, .jpeg, .png', callback: async file => data.value.logo = await handle_image(file) },
         { title: 'Scan - Environment', info: '.jpg, .jpeg, .png', callback: async file => data.value.environment = await handle_image(file) },
@@ -64,13 +57,18 @@
     function handle_create() {
         const json = JSON.parse(data.value.pwndoc_json);
 
-        json['reportTitle'] = data.value.title;
-        json['riskMatrix'] = `${data.value.propability.name.replace(' ', '')}${data.value.damage.name.replace(' ', '')}`;
-        json['customerLogo'] = data.value.logo;
+        json['excludedDestinations'] = parse_csv(data.value.excluded);
+        json['securityProjects'] = parse_csv(data.value.security);
+        json['scanDestinations'] = parse_csv(data.value.scanned);
+
         json['customerScanEnv'] = data.value.environment;
-        json['scanDestinations'] = data.value.scanned;
-        json['excludedDestinations'] = data.value.excluded;
-        json['securityProjects'] = data.value.security;
+        json['reportTitle'] = data.value.title;
+        json['customerLogo'] = data.value.logo;
+
+        json['riskMatrix'] = `
+            ${data.value.propability.name.replace(' ', '')}
+            ${data.value.damage.name.replace(' ', '')}
+        `.replace(/(\r\n|\n|\r| )/gm, '');
 
         fetch('http://172.17.33.144:5000/report/api/generate', {
             method: 'POST',
