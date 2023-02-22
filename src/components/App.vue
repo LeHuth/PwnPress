@@ -13,6 +13,7 @@
 
     const data = ref({
         propability: '',
+        environment: '',
         pwndoc_json: '',
         excluded: '',
         security: '',
@@ -28,6 +29,7 @@
         { title: 'Excluded - Domains', info: 'CSV of excluded domains', callback: text => data.value.scanned = text },
         { title: 'Security - Projects', info: 'CSV of security prjects', callback: text => data.value.security = text },
         { title: 'Customer - Logo', info: '.jpg, .jpeg, .png', callback: text => logo = text },
+        { title: 'Scan - Environment', info: '.jpg, .jpeg, .png', callback: text => environment = text },
     ]
 
     const propabilities = [
