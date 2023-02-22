@@ -8,9 +8,9 @@
 </script>
 
 <template>
-    <div class='w-full p-3'>
+    <div class='p-3'>
         <div class='flex align-items-center justify-content-between'>
-            <div class='flex align-items-center gap-3'>
+            <div v-if='name == null' class='flex align-items-center gap-3'>
                 <i class='text-500 pi pi-upload' />
                 <div>
                     <h4 class='font-semibold'>{{ $attrs.title }}</h4>
@@ -23,7 +23,7 @@
                 icon='pi pi-plus'
                 @click='input_ref.click()'
             />
-            <div v-else class='flex align-items-center gap-3'>
+            <div v-else class='w-full flex justify-content-between align-items-center'>
                 <p class='font-semibold'>{{  name  }}</p>
                 <Button
                     class='p-button-text p-button-danger p-button-rounded'

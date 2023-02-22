@@ -112,12 +112,15 @@
             <div class='w-full px-3'>
                 <Divider />
             </div>
-            <Uploader v-for='(upload, i) in uploads'
-                :key='i'
-                @callback='upload.callback'
-                :title='upload.title'
-                :info='upload.info'
-            />
+            <div class='relative'>
+                <Uploader v-for='(upload, i) in uploads'
+                    :key='i'
+                    style="width: 50%; float: left;"
+                    @callback='upload.callback'
+                    :title='upload.title'
+                    :info='upload.info'
+                />
+            </div>
         </div>
     </div>
 </template>
