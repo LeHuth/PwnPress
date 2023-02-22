@@ -64,10 +64,10 @@
     function handle_create() {
         const json = JSON.parse(data.value.pwndoc_json);
 
-        json['customerTitle'] = data.value.title;
+        json['reportTitle'] = data.value.title;
         json['riskMatrix'] = `${data.value.propability.name.replace(' ', '')}${data.value.damage.name.replace(' ', '')}`;
         json['customerLogo'] = data.value.logo;
-        json['scanEnv'] = data.value.environment;
+        json['customerScanEnv'] = data.value.environment;
         json['scanDestinations'] = data.value.scanned;
         json['excludedDestinations'] = data.value.excluded;
         json['securityProjects'] = data.value.security;
