@@ -38,11 +38,11 @@
                 type='file'
                 class='hidden'
                 ref='input_ref'
-                @input='event => event.target.files[0].text().then(text => {
-                    $emit("callback", text);
+                @input='event => {
+                    $emit("callback", event.target.files[0]);
 
                     name = event.target.files[0].name;
-                })'
+                }'
             />
         </div>
     </div>
