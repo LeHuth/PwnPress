@@ -28,8 +28,8 @@
         { title: 'Scanned - Domains', info: 'CSV of scanned domains', callback: text => data.value.excluded = text }, 
         { title: 'Excluded - Domains', info: 'CSV of excluded domains', callback: text => data.value.scanned = text },
         { title: 'Security - Projects', info: 'CSV of security prjects', callback: text => data.value.security = text },
-        { title: 'Customer - Logo', info: '.jpg, .jpeg, .png', callback: text => logo = text },
-        { title: 'Scan - Environment', info: '.jpg, .jpeg, .png', callback: text => environment = text },
+        { title: 'Customer - Logo', info: '.jpg, .jpeg, .png', callback: text => data.value.logo = text },
+        { title: 'Scan - Environment', info: '.jpg, .jpeg, .png', callback: text => data.value.environment = text },
     ]
 
     const propabilities = [
