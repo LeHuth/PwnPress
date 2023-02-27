@@ -70,7 +70,7 @@
             ${data.value.damage.name.replace(' ', '')}
         `.replace(/(\r\n|\n|\r| )/gm, '');
 
-        fetch('http://172.17.33.144:5000/report/api/generate', {
+        fetch('http://pwntex.zonelocal:5000/report/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(json)
