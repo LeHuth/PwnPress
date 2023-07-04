@@ -26,7 +26,6 @@
         scanned: '',
         damage: '',
         title: '',
-        logo: ''
     });
 
     const uploads = [
@@ -34,7 +33,6 @@
         { title: 'Scanned - Domains', info: 'CSV of scanned scopes', callback: async file => data.value.scanned = await handle_text(file) }, 
         { title: 'Excluded - Domains', info: 'CSV of excluded scopes', callback: async file => data.value.excluded = await handle_text(file) },
         { title: 'Security - Projects', info: 'CSV of security prjects', callback: async file => data.value.security = await handle_text(file) },
-        { title: 'Customer - Logo', info: '.jpg, .jpeg, .png', callback: async file => data.value.logo = await handle_image(file) },
         { title: 'Scan - Environment', info: '.jpg, .jpeg, .png', callback: async file => data.value.environment = await handle_image(file) },
     ]
 
@@ -63,7 +61,6 @@
 
         json['customerScanEnv'] = data.value.environment;
         json['reportTitle'] = data.value.title;
-        json['customerLogo'] = data.value.logo;
 
         json['riskMatrix'] = `
             ${data.value.propability.name.replace(' ', '')}
@@ -115,7 +112,7 @@
             <div class='relative'>
                 <Uploader v-for='(upload, i) in uploads'
                     :key='i'
-                    style="width: 50%; float: left;"
+                    style="width: 100%; float: left;"
                     @callback='upload.callback'
                     :title='upload.title'
                     :info='upload.info'
