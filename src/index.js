@@ -6,7 +6,9 @@ import 'primeflex/primeflex.css';
 
 import './main.css';
 
-import App from './components/App.vue';
+import AppContainer from './components/AppContainer.vue';
+
+import ToastService from 'primevue/toastservice';
 
 import PrimeVue from 'primevue/config';
 
@@ -14,7 +16,8 @@ import Ripple from 'primevue/ripple';
 
 import { createApp } from 'vue';
 
-createApp(App)
+createApp(AppContainer)
+    .use(ToastService)
     .use(PrimeVue, { ripple: true })
     .directive('ripple', Ripple)
     .mount('#app');

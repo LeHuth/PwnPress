@@ -4,10 +4,10 @@
     import Dropdown from 'primevue/dropdown';
     import Divider from 'primevue/divider';
     import Button from 'primevue/button';
-
+    
     import Uploader from './Uploader.vue';
 
-    import { ref } from 'vue';
+    import { ref, inject } from 'vue';
 
     import {
         handle_image,
@@ -51,6 +51,8 @@
         { name: 'Sehr Hoch' },
         { name: 'Kritisch' },
     ]
+
+    const add_message = inject('add_message');
 
     function handle_create() {
         const json = JSON.parse(data.value.pwndoc_json);
