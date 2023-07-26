@@ -55,32 +55,52 @@
     const add_message = inject('add_message');
 
     function handle_create() {
-        const json = JSON.parse(data.value.pwndoc_json);
+        const messages = [];
 
-        json['excludedDestinations'] = parse_csv(data.value.excluded);
-        json['securityProjects'] = parse_csv(data.value.security);
-        json['scanDestinations'] = parse_csv(data.value.scanned);
+        if (!data.value.title)
+            messages.push('Titel auswählen');
+        if (!data.value.propability.name)
+            messages.push('Wahrscheinlichkeit auswählen');
+        if (!data.value.damage.name)
+            messages.push('Schadensausmass auswählen');
 
-        json['customerScanEnv'] = data.value.environment;
-        json['reportTitle'] = data.value.title;
+        if (messages.length > 0)
+            messages.forEach((message, i) =>
+                setTimeout(() => add_message({
+                    summary: 'Eingaben nicht korrekt',
+                    detail: message,
+                    severity: 'info',
+                    life: 3000
+                }), i * 400)
+            );
+        else {
+            const json = JSON.parse(data.value.pwndoc_json);
 
-        json['riskMatrix'] = `
-            ${data.value.propability.name.replace(' ', '')}
-            ${data.value.damage.name.replace(' ', '')}
-        `.replace(/(\r\n|\n|\r| )/gm, '');
+            json['excludedDestinations'] = parse_csv(data.value.excluded);
+            json['securityProjects'] = parse_csv(data.value.security);
+            json['scanDestinations'] = parse_csv(data.value.scanned);
 
-        fetch('https://pwntex.zonelocal:5000/report/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(json)
-        }).then(response => {
-            loading.value = false;
+            json['customerScanEnv'] = data.value.environment;
+            json['reportTitle'] = data.value.title;
 
-            if (response.status == '200')
-                window.open(response.url)
-        });
+            json['riskMatrix'] = `
+                ${data.value.propability.name.replace(' ', '')}
+                ${data.value.damage.name.replace(' ', '')}
+            `.replace(/(\r\n|\n|\r| )/gm, '');
 
-        loading.value = true;
+            fetch('https://pwntex.zonelocal:5000/report/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(json)
+            }).then(response => {
+                loading.value = false;
+
+                if (response.status == '200')
+                    window.open(response.url)
+            });
+
+            loading.value = true;
+        }
     }
 </script>
 
