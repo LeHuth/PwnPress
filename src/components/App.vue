@@ -32,7 +32,7 @@
         { title: 'PwnDoc - Json', info: 'Json from PwnDoc', callback: async file => data.value.pwndoc_json = await handle_text(file) },
         { title: 'Scanned - Domains', info: 'CSV of scanned scopes', callback: async file => data.value.scanned = await handle_text(file) }, 
         { title: 'Excluded - Domains', info: 'CSV of excluded scopes', callback: async file => data.value.excluded = await handle_text(file) },
-        { title: 'Security - Projects', info: 'CSV of security prjects', callback: async file => data.value.security = await handle_text(file) },
+        { title: 'Security - Projects', info: 'CSV of security projects', callback: async file => data.value.security = await handle_text(file) },
         { title: 'Scan - Environment', info: '.jpg, .jpeg, .png', callback: async file => data.value.environment = await handle_image(file) },
     ]
 
@@ -55,25 +55,30 @@
     const add_message = inject('add_message');
 
     function handle_create() {
-        const messages = [];
+        let entity_index = 0;
 
-        if (!data.value.title)
-            messages.push('Titel auswählen');
-        if (!data.value.propability.name)
-            messages.push('Wahrscheinlichkeit auswählen');
-        if (!data.value.damage.name)
-            messages.push('Schadensausmass auswählen');
+        const entity_map = {
+            'Titel': data.value.title,
+            'Wahrscheinlichkeit': data.value.propability.name,
+            'Schadensausmass': data.value.damage.name,
+            'PwnDoc - Json': data.value.pwndoc_json,
+            'Scanned - Domains': data.value.scanned,
+            'Excluded - Domains': data.value.excluded,
+            'Security - Projects': data.value.securityProjects,
+            'Scan - Environment': data.value.environment
+        };
 
-        if (messages.length > 0)
-            messages.forEach((message, i) =>
+        Object.keys(entity_map).forEach(key => {
+            if (!entity_map[key])
                 setTimeout(() => add_message({
-                    summary: 'Eingaben nicht korrekt',
-                    detail: message,
+                    summary: 'Incorrect input',
+                    detail: `${key} not defined`,
                     severity: 'info',
                     life: 3000
-                }), i * 400)
-            );
-        else {
+                }), entity_index++ * 400);
+        });
+
+        if (entity_index <= 0) {
             const json = JSON.parse(data.value.pwndoc_json);
 
             json['excludedDestinations'] = parse_csv(data.value.excluded);
