@@ -64,7 +64,7 @@
             'PwnDoc - Json': data.value.pwndoc_json,
             'Scanned - Domains': data.value.scanned,
             'Excluded - Domains': data.value.excluded,
-            'Security - Projects': data.value.securityProjects,
+            'Security - Projects': data.value.security,
             'Scan - Environment': data.value.environment
         };
 
