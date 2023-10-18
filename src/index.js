@@ -15,9 +15,23 @@ import PrimeVue from 'primevue/config';
 import Ripple from 'primevue/ripple';
 
 import { createApp } from 'vue';
+import App from "./components/App.vue";
+import FileUpload from "primevue/fileupload";
+import Listbox from "primevue/listbox";
+import Divider from "primevue/divider";
+import Button from "primevue/button";
 
+const app = createApp(App);
+app.use(PrimeVue)
+app.use(ToastService)
+app.component('FileUpload',FileUpload)
+app.component('ListBox', Listbox)
+app.component('Divider', Divider)
+app.component('Button', Button)
+app.mount('#app')
+/*
 createApp(AppContainer)
     .use(ToastService)
     .use(PrimeVue, { ripple: true })
     .directive('ripple', Ripple)
-    .mount('#app');
+    .mount('#app');*/
