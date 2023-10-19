@@ -1,0 +1,20 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  TARGET_DIRECTORY: "/var/www/dev/"
+
+build_vue:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+deploy_vue:
+  stage: deploy
+  script:
+    - rsync -avz --delete dist/ $SSH_USER@$SERVER:$TARGET_DIRECTORY
