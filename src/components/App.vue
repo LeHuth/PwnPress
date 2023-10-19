@@ -113,7 +113,7 @@
     <div class='w-screen h-screen flex justify-content-center align-items-center surface-100'>
         <div class='container surface-50 gap-2'>
             <div class='w-full flex align-items-center p-3'>
-                <h2 class='font-bold'>Create Report</h2>
+                <h2 class='font-bold'>Report</h2>
             </div>
             <div class='w-full flex justify-content-between align-items-center gap-2 p-3'>
                 <InputText v-model='data.title' class='w-full' placeholder='Title*' />
