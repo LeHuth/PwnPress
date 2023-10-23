@@ -3,7 +3,12 @@ stages:
   - deploy
 
 variables:
-  TARGET_DIRECTORY: "/var/www/dev/"
+  TARGET_DIRECTORY: "/var/www/pwntex/"
+
+before_script:
+  - source ~/.bashrc || true  # replace with appropriate shell initialization file
+  - source ~/.bash_profile || true  # optional
+
 
 build_vue:
   stage: build
@@ -17,4 +22,6 @@ build_vue:
 deploy_vue:
   stage: deploy
   script:
-    - rsync -avz --delete dist/ $SSH_USER@$SERVER:$TARGET_DIRECTORY
+    - mkdir -p $TARGET_DIRECTORY  # Create target directory if it doesn't exist
+    - cp -r dist/* $TARGET_DIRECTORY  # Copy the contents of the 'dist' folder to the target directory
+
