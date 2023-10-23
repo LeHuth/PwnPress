@@ -3,7 +3,7 @@ stages:
   - deploy
 
 variables:
-  PATH: "/home/leonard/.nvm/versions/node/v18.17.0/bin:$PATH"
+  PATH: "/home/leonard/.nvm/versions/node/v18.17.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
   TARGET_DIRECTORY: "/var/www/dev/"
 
 build_vue:
