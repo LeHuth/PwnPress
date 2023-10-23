@@ -4,6 +4,10 @@ stages:
 
 variables:
   TARGET_DIRECTORY: "/var/www/dev/"
+  
+print_path:
+  script:
+    - echo $PATH
 
 build_vue:
   stage: build
