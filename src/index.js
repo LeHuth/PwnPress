@@ -20,6 +20,8 @@ import FileUpload from "primevue/fileupload";
 import Listbox from "primevue/listbox";
 import Divider from "primevue/divider";
 import Button from "primevue/button";
+import SelectButton from "primevue/selectbutton";
+import ProgressBar from "primevue/progressbar";
 
 const app = createApp(App);
 app.use(PrimeVue)
@@ -28,6 +30,8 @@ app.component('FileUpload',FileUpload)
 app.component('ListBox', Listbox)
 app.component('Divider', Divider)
 app.component('Button', Button)
+app.component('SelectButton', SelectButton)
+app.component('ProgressBar', ProgressBar)
 app.mount('#app')
 /*
 createApp(AppContainer)

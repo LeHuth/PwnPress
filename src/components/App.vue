@@ -28,6 +28,15 @@ const data = ref({
   damage: '',
   title: '',
 });
+const progress_count = computed(()=> {
+  let amount = 0
+  Object.entries(data.value).forEach((entry) =>{
+    if(entry[1] != ""){
+      amount++
+    }
+  })
+  return (100/8)*amount
+})
 
 const form_valid = computed(() => {
   try {
@@ -161,6 +170,7 @@ function handle_create() {
         <InputText v-model='data.title' class='w-full shadow-none' placeholder='Title' required/>
       </div>
       <h2 class='font-bold mt-4' style="padding-top:4px">Risiko Matrix</h2>
+      <SelectButton  :options="['Wahrscheinlichkeit', 'Schadensausmass']" disabled class="-mb-2"/>
       <div class='grid mt-0 align-items-center'>
         <!--                <Dropdown v-model='data.propability' :options='propabilities' optionLabel='name' class='w-full' placeholder='Wahrscheinlichkeit' />
                         <Dropdown v-model='data.damage' :options='damages' optionLabel='name' class='w-full' placeholder='Schadensausmass' />-->
@@ -185,12 +195,32 @@ function handle_create() {
         </div>
 
       </div>
-      <Button :disabled="!form_valid" class="mt-5" label="Create Report" severity="secondary" @click='handle_create'/>
+      <Transition name="bounce">
+      <ProgressBar
+          v-if="!form_valid"
+          class="p-disabled mt-5"
+          :value="progress_count"/>
+      <Button v-else class="mt-5" label="Create Report" severity="secondary" @click='handle_create'/>
+      </Transition>
     </div>
   </div>
 </template>
 
 <style scoped>
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 :deep(.p-fileupload-file-thumbnail) {
   visibility: hidden;
 }
@@ -204,5 +234,16 @@ function handle_create() {
   border: none;
   box-shadow: none;
   padding-bottom: 0;
+}
+:deep(.p-selectbutton) {
+  box-shadow: none !important;
+}
+:deep(.p-selectbutton > .p-button) {
+  width: 50%;
+  border: none;
+  background:var(--surface-50);
+}
+:deep(.p-progressbar){
+  height:44px;
 }
 </style>
