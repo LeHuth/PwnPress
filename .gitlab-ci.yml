@@ -22,4 +22,6 @@ build_vue:
 deploy_vue:
   stage: deploy
   script:
-    - rsync -avz --delete dist/ $SSH_USER@$SERVER:$TARGET_DIRECTORY
+    - mkdir -p $TARGET_DIRECTORY  # Create target directory if it doesn't exist
+    - cp -r dist/* $TARGET_DIRECTORY  # Copy the contents of the 'dist' folder to the target directory
+
