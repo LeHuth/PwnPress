@@ -1,4 +1,5 @@
 stages:
+  - print_path
   - build
   - deploy
 
