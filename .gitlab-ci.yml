@@ -4,6 +4,7 @@ stages:
   - deploy
 
 variables:
+  PATH: "/home/leonard/.nvm/versions/node/v18.17.0/bin:$PATH"
   TARGET_DIRECTORY: "/var/www/dev/"
   
 print_path:
