@@ -5,6 +5,11 @@ stages:
 variables:
   TARGET_DIRECTORY: "/var/www/dev/"
 
+before_script:
+  - source ~/.bashrc || true  # replace with appropriate shell initialization file
+  - source ~/.bash_profile || true  # optional
+
+
 build_vue:
   stage: build
   script:
