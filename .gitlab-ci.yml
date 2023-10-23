@@ -1,5 +1,5 @@
 stages:
-  - print_path
+  - test
   - build
   - deploy
 
@@ -7,6 +7,7 @@ variables:
   TARGET_DIRECTORY: "/var/www/dev/"
   
 print_path:
+  stage: test
   script:
     - echo $PATH
 
