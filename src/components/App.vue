@@ -1,96 +1,141 @@
 <script setup>
-    import ProgressSpinner from 'primevue/progressspinner';
-    import InputText from 'primevue/inputtext';
-    import Dropdown from 'primevue/dropdown';
-    import Divider from 'primevue/divider';
-    import Button from 'primevue/button';
-    
-    import Uploader from './Uploader.vue';
+import ProgressSpinner from 'primevue/progressspinner';
+import InputText from 'primevue/inputtext';
+import Dropdown from 'primevue/dropdown';
+import Divider from 'primevue/divider';
+import Button from 'primevue/button';
 
-    import { ref, inject } from 'vue';
+import Uploader from './Uploader.vue';
 
-    import {
-        handle_image,
-        handle_text,
-        parse_csv
-    } from '../utils';
+import {ref, inject, onMounted, computed} from 'vue';
 
-    const loading = ref(false);
+import {
+  handle_ansi,
+  handle_image,
+  handle_text,
+  parse_csv
+} from '../utils';
 
-    const data = ref({
-        propability: '',
-        environment: '',
-        pwndoc_json: '',
-        excluded: '',
-        security: '',
-        scanned: '',
-        damage: '',
-        title: '',
-    });
+const loading = ref(false);
 
-    const uploads = [
-        { title: 'PwnDoc - Json', info: 'Json from PwnDoc', callback: async file => data.value.pwndoc_json = await handle_text(file) },
-        { title: 'Scanned - Domains', info: 'CSV of scanned scopes', callback: async file => data.value.scanned = await handle_text(file) }, 
-        { title: 'Excluded - Domains', info: 'CSV of excluded scopes', callback: async file => data.value.excluded = await handle_text(file) },
-        { title: 'Security - Projects', info: 'CSV of security projects', callback: async file => data.value.security = await handle_text(file) },
-        { title: 'Scan - Environment', info: '.jpg, .jpeg, .png', callback: async file => data.value.environment = await handle_image(file) },
-    ]
+const data = ref({
+  propability: '',
+  environment: '',
+  pwndoc_json: '',
+  excluded: '',
+  security: '',
+  scanned: '',
+  damage: '',
+  title: '',
+});
 
-    const propabilities = [
-        { name: 'Sehr Wahrscheinlich' },
-        { name: 'Wahrscheinlich' },
-        { name: 'Möglich' },
-        { name: 'Unwahrscheinlich' },
-        { name: 'Nahezu Unmöglich' },
-    ];
+const form_valid = computed(() => {
+  try {
+    Object.entries(data.value).forEach((entry) => {
+      console.log('scanning...', entry)
+      if (entry[1] == "") {
+        console.log('exept')
+        throw new Error('form invalid')
+      }
+    })
+  } catch (e) {
+    console.log('whooops')
+    return false
+  }
+  return true
 
-    const damages = [
-        { name: 'Niedrig' },
-        { name: 'Mittel' },
-        { name: 'Hoch' },
-        { name: 'Sehr Hoch' },
-        { name: 'Kritisch' },
-    ]
+})
 
-    const add_message = inject('add_message');
+const up = ref(null)
 
-    function handle_create() {
-        let entity_index = 0;
+const uploads = [
+  {
+    title: 'PwnDoc - Json',
+    info: 'Json from PwnDoc',
+    file_tpe: '.json',
+    callback: async file => data.value.pwndoc_json = await handle_text(file)
+  },
+  {
+    title: 'Scanned - Domains',
+    info: 'CSV of scanned scopes',
+    file_tpe: '.csv',
+    callback: async file => data.value.scanned = await handle_ansi(file)
+  },
+  {
+    title: 'Excluded - Domains',
+    info: 'CSV of excluded scopes',
+    file_tpe: '.csv',
+    callback: async file => data.value.excluded = await handle_ansi(file)
+  },
+  {
+    title: 'Security - Projects',
+    info: 'CSV of security projects',
+    file_tpe: '.csv',
+    callback: async file => data.value.security = await handle_ansi(file)
+  },
+  {
+    title: 'Scan - Environment',
+    info: '.jpg, .jpeg, .png',
+    file_tpe: '.png,.jpeg,.jpg',
+    callback: async file => data.value.environment = await handle_image(file)
+  },
+]
 
-        const entity_map = {
-            'Titel': data.value.title,
-            'Wahrscheinlichkeit': data.value.propability.name,
-            'Schadensausmass': data.value.damage.name,
-            'PwnDoc - Json': data.value.pwndoc_json,
-            'Scanned - Domains': data.value.scanned,
-            'Excluded - Domains': data.value.excluded,
-            'Security - Projects': data.value.security,
-            'Scan - Environment': data.value.environment
-        };
+const propabilities = [
+  {name: 'Sehr Wahrscheinlich'},
+  {name: 'Wahrscheinlich'},
+  {name: 'Möglich'},
+  {name: 'Unwahrscheinlich'},
+  {name: 'Nahezu Unmöglich'},
+];
 
-        Object.keys(entity_map).forEach(key => {
-            if (!entity_map[key])
-                setTimeout(() => add_message({
-                    summary: 'Incorrect input',
-                    detail: `${key} not defined`,
-                    severity: 'info',
-                    life: 3000
-                }), entity_index++ * 400);
-        });
+const damages = [
+  {name: 'Niedrig'},
+  {name: 'Mittel'},
+  {name: 'Hoch'},
+  {name: 'Sehr Hoch'},
+  {name: 'Kritisch'},
+]
 
-        if (entity_index <= 0) {
-            const json = JSON.parse(data.value.pwndoc_json);
+const add_message = inject('add_message');
 
-            json['excludedDestinations'] = parse_csv(data.value.excluded);
-            json['securityProjects'] = parse_csv(data.value.security);
-            json['scanDestinations'] = parse_csv(data.value.scanned);
+function handle_create() {
+  let entity_index = 0;
 
-            json['customerScanEnv'] = data.value.environment;
-            json['reportTitle'] = data.value.title;
+  const entity_map = {
+    'Titel': data.value.title,
+    'Wahrscheinlichkeit': data.value.propability.name,
+    'Schadensausmass': data.value.damage.name,
+    'PwnDoc - Json': data.value.pwndoc_json,
+    'Scanned - Domains': data.value.scanned,
+    'Excluded - Domains': data.value.excluded,
+    'Security - Projects': data.value.security,
+    'Scan - Environment': data.value.environment
+  };
+  /*
+          Object.keys(entity_map).forEach(key => {
+              if (!entity_map[key])
+                  setTimeout(() => add_message({
+                      summary: 'Incorrect input',
+                      detail: `${key} not defined`,
+                      severity: 'info',
+                      life: 3000
+                  }), entity_index++ * 400);
+          });*/
 
-            json['riskMatrix'] = `
-                ${data.value.propability.name.replace(' ', '')}
-                ${data.value.damage.name.replace(' ', '')}
+  if (entity_index <= 0) {
+    const json = JSON.parse(data.value.pwndoc_json);
+
+    json['excludedDestinations'] = parse_csv(data.value.excluded);
+    json['securityProjects'] = parse_csv(data.value.security);
+    json['scanDestinations'] = parse_csv(data.value.scanned);
+
+    json['customerScanEnv'] = data.value.environment;
+    json['reportTitle'] = data.value.title;
+
+    json['riskMatrix'] = `
+                ${data.value.propability.replace(' ', '')}
+                ${data.value.damage.replace(' ', '')}
             `.replace(/(\r\n|\n|\r| )/gm, '');
 
             fetch('https://pwntex.zonelocal:5000/report/api/generate', {
@@ -100,51 +145,64 @@
             }).then(response => {
                 loading.value = false;
 
-                if (response.status == '200')
-                    window.open(response.url)
-            });
+      if (response.status == '200')
+        window.open(response.url)
+    });
 
-            loading.value = true;
-        }
-    }
+    loading.value = true;
+  }
+}
 </script>
 
 <template>
-    <div class='w-screen h-screen flex justify-content-center align-items-center surface-100'>
-        <div class='container surface-50 gap-2'>
-            <div class='w-full flex align-items-center p-3'>
-                <h2 class='font-bold'>Report</h2>
-            </div>
-            <div class='w-full flex justify-content-between align-items-center gap-2 p-3'>
-                <InputText v-model='data.title' class='w-full' placeholder='Title*' />
-                <div>
-                    <ProgressSpinner v-if='loading' class='w-4rem'  />
-                    <Button v-else class='p-button-info p-button-raised w-12rem' label='Create' @click='handle_create' />
-                </div>
-            </div>
-            <div class='w-full px-3'>
-                <Divider />
-            </div>
-            <div class='w-full flex align-items-center p-3'>
-                <h2 class='font-bold'>Risiko Matrix</h2>
-            </div>
-            <div class='w-full flex justify-content-between align-items-center gap-2 p-3'>
-                <Dropdown v-model='data.propability' :options='propabilities' optionLabel='name' class='w-full' placeholder='Wahrscheinlichkeit' />
-                <Dropdown v-model='data.damage' :options='damages' optionLabel='name' class='w-full' placeholder='Schadensausmass' />
-            </div>
-            <h2 class='font-bold mx-3'>Uploads</h2>
-            <div class='w-full px-3'>
-                <Divider />
-            </div>
-            <div class='relative'>
-                <Uploader v-for='(upload, i) in uploads'
+  <div class='w-screen h-screen flex justify-content-center align-items-center surface-100'>
+    <div class='container border-round-lg surface-50 gap-1 p-3'>
+      <div>
+        <InputText v-model='data.title' class='w-full shadow-none' placeholder='Title' required/>
+      </div>
+      <h2 class='font-bold mt-4' style="padding-top:4px">Risiko Matrix</h2>
+      <div class='grid mt-0 align-items-center'>
+        <!--                <Dropdown v-model='data.propability' :options='propabilities' optionLabel='name' class='w-full' placeholder='Wahrscheinlichkeit' />
+                        <Dropdown v-model='data.damage' :options='damages' optionLabel='name' class='w-full' placeholder='Schadensausmass' />-->
+        <ListBox v-model="data.propability" :options="propabilities" class="col surface-50" option-label="name"
+                 option-value="name"/>
+        <Divider class="mx-0 align-self-stretch" layout="vertical"/>
+        <ListBox v-model='data.damage' :options="damages" class="col surface-50 " option-label="name"
+                 option-value="name"/>
+      </div>
+      <h2 class='font-bold mt-4' style="margin-bottom:12px">Uploads</h2>
+      <div>
+        <Uploader :file_type="uploads[0].file_tpe" :info="uploads[0].info" :title="uploads[0].title"
+                  style="margin-bottom:8px" @callback="uploads[0].callback"/>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem">
+          <Uploader v-for='(upload, i) in uploads.slice(1)'
                     :key='i'
-                    style="width: 100%; float: left;"
-                    @callback='upload.callback'
-                    :title='upload.title'
+                    :file_type="upload.file_tpe"
                     :info='upload.info'
-                />
-            </div>
+                    :title='upload.title'
+                    @callback='upload.callback'
+          />
         </div>
+
+      </div>
+      <Button :disabled="!form_valid" class="mt-5" label="Create Report" severity="secondary" @click='handle_create'/>
     </div>
+  </div>
 </template>
+
+<style scoped>
+:deep(.p-fileupload-file-thumbnail) {
+  visibility: hidden;
+}
+
+:deep(.p-listbox-list) li {
+  text-align: center;
+  border-radius: 0.375rem !important;
+}
+
+:deep(.p-listbox) {
+  border: none;
+  box-shadow: none;
+  padding-bottom: 0;
+}
+</style>
